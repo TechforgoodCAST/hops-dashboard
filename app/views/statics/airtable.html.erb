@@ -1,0 +1,181 @@
+
+<div class="max-w-5xl mx-auto px-4 my-8">
+  <%= render partial: 'layouts/notices' %>
+
+  <div class="card">
+    
+    <% 
+@locations = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Locations")
+#@records = @locations.all
+#@records.each do |record|
+#  @fields = record.fields;
+#  unless Location.find_by({name: @fields['Location']})
+  #  Location.create({
+  #    name: @fields['Location'],
+  #    region: Location.regions[Array(@fields['Region'])[0]]
+  #  })
+#  end
+#end
+#
+@venues = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Venues")
+#@records = @venues.all
+#@records.each do |record|
+#  @fields = record.fields;
+#  unless Venue.find_by({name: @fields['Name']})
+#    results = Geocoder.search(Array(@fields['Address'])[0], params: {region: "gb"})
+#
+#    @location = @locations.find(@fields['Location'][0])
+#    Venue.create!({
+#      name: @fields['Name'],
+#      address: Array(@fields['Address'])[0],
+#      latitude: results.first.nil? ? nil : results.first.latitude,
+#      longitude: results.first.nil? ? nil : results.first.longitude,
+#      location_id: Location.find_by({name: @location.fields['Location']}).id
+#    })
+#  end
+#end
+
+#
+#@hops = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Design hops")
+#@records = @hops.all
+#
+#@records.each do |record|
+#  @fields = record.fields;
+#  
+#
+#  if @fields['Shareable?']
+#    @venue_record = @venues.find(Array(@fields['Venues'])[0])
+#    @venue = Venue.find_by({name: @venue_record.fields['Name']})
+#    date = @fields['Date'].to_datetime
+#    name = @venue.location.name + " - " + date.strftime("#{date.day.ordinalize} %B %Y")
+#    
+#    unless DesignHop.find_by({name: name})
+#    
+#      DesignHop.create!({
+#        name: name,
+#        date: @fields['Date'],
+#        venue: @venue
+#      })
+#      
+#    end
+#  end
+#end
+
+#@attendees = Airrecord.table("keyiKQ6Ut72kvmzN0", "appchfb5dUtfrlVSZ", "Attendee sign-up data")
+#@records = @attendees.all
+#
+#@records.each do |record|
+#  @fields = record.fields;
+#  
+#  unless Person.find_by({airtable_record: record.id})
+#    hop = DesignHop.find_by({name: @fields['Which design hop are you applying to join?'][0].sub(' (past)', '')})
+#    
+#    if hop
+#
+#      org = Organisation.find_by(
+#        {name: @fields['Organisation name']}) || 
+#        (!@fields['Charity Number'].nil? && Organisation.find_by({registration_id: @fields['Charity Number']})
+#      )
+#      %>
+#      
+#      <%
+#      unless org
+#        org = Organisation.create({
+#          name: @fields['Organisation name'],
+#          registration_type: 'CCEW',
+#          registration_id: @fields['Charity Number'],
+#          income: Organisation.incomes[Array(@fields['What size is your charity? What is your approximate income and number of employees?'])[0]]
+#          #num_employees: Get from CharityBase
+#        })
+#      end
+#
+#      person = Person.create({
+#        first_name: @fields['First name'],
+#        last_name: @fields['Last name'],
+#        email: @fields['Email'],
+#        airtable_record: record.id,
+#        organisation_id: org.id,
+#        region: Person.regions[Array(@fields['Region'])[0]],
+#        design_hop_id: hop.id
+#      })
+#
+#      Interaction.create({
+#        action_type: 1,
+#        action: @fields['People often talk about being on a ‘digital journey’ to describe the introduction and use of technology in their work. Where do you feel you are on that journey?'],
+#        date_occured: record.created_at,
+#        date_recorded: record.created_at,
+#        source: 'https://airtable.com/tbl72bAW3vmwsBe4Y/viwfeIy81HtV5GiZ3',
+#        person_id: person.id
+#      })
+#    end
+#  end
+#end
+
+@networks = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Networks")
+@records = @networks.all
+
+@records.each do |record|
+  @fields = record.fields;
+
+  unless Network.find_by({airtable_record: record.id})
+
+    network = Network.create!({
+      name: @fields['Org/groups'],
+      airtable_record: record.id
+    })
+
+  end
+  
+  network = Network.find_by({airtable_record: record.id})
+    
+    hops = Array(@fields['Design Hop partnered for'])
+    if hops
+      hops.each do |hop|
+        if DesignHop.find_by({airtable_record: hop})
+          HopNetwork.create!({
+            design_hop: DesignHop.find_by({airtable_record: hop}),
+            network: network
+          })  
+        end
+      end
+    end
+end
+#
+#@crew = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Facilitators -  CAST CREW")
+#@records = @crew.all
+#
+#@records.each do |record|
+#  @fields = record.fields;
+#  unless Crew.find_by({airtable_record: record.id})
+#
+#    crew = Crew.create!({
+#      name: @fields['Name'],
+#      airtable_record: record.id
+#    })
+#    
+#    locations = Array(@fields['Locations'])
+#    if locations
+#      locations.each do |location|
+#        CrewLocation.create!({
+#          location: Location.find_by({airtable_record: location}),
+#          crew: crew
+#        })  
+#      end
+#    end
+#      
+#    networks = Array(@fields['Network partners'])
+#    if networks
+#      networks.each do |network|
+#        CrewNetwork.create!({
+#          network: Network.find_by({airtable_record: network}),
+#          crew: crew
+#        })  
+#      end
+#    end
+#
+#  end
+#end
+
+
+  %>  </div>
+</div>

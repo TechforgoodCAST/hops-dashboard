@@ -1,0 +1,22 @@
+<div class="flex flex-column h-full items-center">
+  <div class="max-w-sm mx-auto px-4 my-8">
+    <%= render partial: 'layouts/notices' %>
+
+    <div class="card mb-4">
+      <h1 class="text-2xl font-bold mb-6"><%= t('.sign_in') %></h1>
+
+      <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <%= f.input :email, input_html: { class: 'w-full', autofocus: true } %>
+        <%= f.input :password, input_html: { class: 'w-full' } %>
+
+        <% if devise_mapping.rememberable? %>
+          <%= f.input :remember_me, as: :boolean, label: false, inline_label: 'Remember me', input_html: { class: 'inline-block' } %>
+        <% end %>
+
+        <%= f.submit 'Sign in', class: 'btn btn-primary w-full' %>
+      <% end %>
+    </div>
+
+    <%= render 'devise/shared/links' %>
+  </div>
+</div>

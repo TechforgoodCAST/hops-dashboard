@@ -1,0 +1,15 @@
+
+<div class="max-w-5xl mx-auto px-4 my-8">
+  <%= render partial: 'layouts/notices' %>
+  <p class="mb-6"><%= link_to '‹ Back to networks', networks_path, class: 'underline' %></p>
+
+  <div class="card">
+    <h1><%= @network.name %></h1>
+    <p class="text-sm text-gray-600"><%= pluralize(@network.design_hops.count, 'hop') %> with <%= pluralize(@attendees.count, 'attendee')%></p>
+   
+    <h2 class="mt-3">Hops</h2>
+    <% @network.design_hops.each do |hop| %>
+      <p class="text-sm text-gray-600"><%= link_to hop.name, design_hop_path(hop), class: 'link' %></p>
+    <% end %>
+  </div>
+</div>

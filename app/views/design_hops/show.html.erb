@@ -1,0 +1,109 @@
+
+<div class="max-w-5xl mx-auto px-4 my-8">
+  <%= render partial: 'layouts/notices' %>
+  <p class="mb-6"><%= link_to '‹ Back to hops', regions_path, class: 'underline' %></p>
+
+  <div class="card">
+    <h1><%= @hop.location.name %> - <%= friendly_date(@hop.date) %></h1>
+    <p class="text-sm text-gray-600"><%= pluralize(@hop.people.count, 'attendee') %> from <%= pluralize(@hop.organisations.count, 'organisation')%></p>
+   
+    <h2 class="mt-3">Organisations</h2>
+    <% @hop.organisations.each do |organisation| %>
+      <p class="mb-3"><%= organisation.name %></p>
+    <% end %>
+    
+    <h2 class="mt-3">Organisations by maturity</h2>
+    <%
+    interactions = @hop.interactions.select { |i| i.action_type == 'maturity' }
+
+    maturities = {
+      "Tech is not a priority for us" => 0,
+      "We don’t know where to start" => 0,
+      "We’re beginning to experiment with tech" => 0,
+      "Tech is a strategic priority and progress is happening" => 0,
+      "It's embedded into what we do across all areas and our daily practices" => 0
+    }
+    interactions.each do |interaction|
+      if maturities.key?(interaction.action) then maturities[interaction.action]+= 1 end
+    end
+    %>
+      
+    <canvas id="org_maturities" width="400" height="150"></canvas>
+    <script>
+    var ctx = document.getElementById('org_maturities').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: [<%= ('"'+maturities.keys.join('","')+'"').html_safe %>],
+            datasets: [{
+                data: [<%= maturities.values.join(",") %>],
+                backgroundColor: '#2daeb7'
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+    
+    <h2>Organisations by income</h2>
+    <%
+    orgs = @hop.organisations
+
+    incomes = {}
+    Organisation.incomes.keys.each do |category|
+      incomes[category] = 0
+    end
+
+    orgs.each do |org|
+       if incomes.key?(org.income) then incomes[org.income]+= 1 end
+    end
+    %>
+    <canvas id="org_incomes" width="400" height="150"></canvas>
+    <script>
+    var ctx = document.getElementById('org_incomes').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [<%= ('"'+incomes.keys.join('","')+'"').html_safe %>],
+            datasets: [{
+                data: [<%= incomes.values.join(",") %>],
+                backgroundColor: '#2daeb7'
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    scaleLabel : {
+                        display: false,
+                        labelString: 'Annual Income'
+                    },
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+    
+    <h2>Partners</h2>
+    <% @hop.networks.each do |network| %>
+      <p><%= link_to network.name, network_path(network), class: 'link' %></p>
+    <% end %>
+  </div>
+</div>

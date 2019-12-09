@@ -1,0 +1,11 @@
+
+<div class="max-w-5xl mx-auto px-4 my-8">
+  <%= render partial: 'layouts/notices' %>
+
+  <div class="card">
+    <h1 class="mb-3">Networks</h1>
+    <% @networks.each do |network| %>
+      <p class="text-sm text-gray-600 mb-1"><%= link_to network.name, network_path(network), class: 'link' %></p>
+    <% end %>
+  </div>
+</div>

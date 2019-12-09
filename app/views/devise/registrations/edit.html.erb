@@ -1,0 +1,24 @@
+<div class="max-w-3xl mx-auto px-4 my-8">
+  <div class="card">
+    <h1 class="text-2xl font-bold mb-6">Edit your profile</h1>
+
+    <%= simple_form_for(resource, as: resource_name, url: user_registration_path, html: { method: :put }) do |f| %>
+
+      <%= f.input :full_name %>
+      <%= f.input :display_name %>
+      <%= f.input :email %>
+
+      <hr class="mb-5">
+
+      <%= f.input :password, label: 'Set a new password', hint: "Leave blank if you don't want to change it." %>
+
+      <hr class="mb-5">
+
+      <div class="flex flex-wrap">
+      </div>
+      <%= f.input :current_password, hint: 'We need your current password to confirm your changes.' %>
+      <%= f.submit 'Update', class: 'btn btn-primary' %>
+
+    <% end %>
+  </div>
+</div>

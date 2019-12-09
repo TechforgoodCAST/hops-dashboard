@@ -1,0 +1,157 @@
+<div class="max-w-5xl mx-auto px-4 my-8">
+  <%= render partial: 'layouts/notices' %>
+  <p class="mb-6"><%= link_to '‹ Back to regions', regions_path, class: 'underline' %></p>
+  
+  <div class="flex">
+    <div class="w-1/2 mr-3">
+
+      <div class="card">
+        <h1><%= @region.name %></h1>
+        <p class="text-sm text-gray-600"><%= pluralize(@region.design_hops.count, 'hop') %> with <%= pluralize(@region.people.count, 'attendee')%></p>
+
+        <h2 class="mt-3">Hops</h2>
+        <% @region.design_hops.each do |hop| %>
+          <p class="text-sm text-gray-600"><%= link_to hop.name, design_hop_path(hop), class: 'link' %></p>
+        <% end %>
+        
+        <h2 class="mt-3">Partners</h2>
+        <% @region.networks.uniq.each do |network| %>
+          <p class="text-sm text-gray-600"><%= link_to network.name, network_path(network), class: 'link' %></p>
+        <% end %>
+        
+        <h2 class="mt-3">Crew</h2>
+        <% @region.crews.each do |crew| %>
+          <p class="text-sm text-gray-600"><%= crew.name %></p>
+        <% end %>
+        
+        <h2 class="mt-3">Organisations (<%= number_to_percentage(@region.organisations.uniq.count.to_f / @region.charities.to_f * 100, precision: 1)%>)</h2>
+        <% @region.organisations.uniq.each do |organisation| %>
+          <p class="text-sm text-gray-600"><%= organisation.name %></p>
+        <% end %>
+        
+      </div>
+    </div>
+
+    <div class="w-1/2 mr-3">
+      <div class="card">
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxlCUcV6cfFlmWPGahqgr1Lk3NP6CqyL0" data-turbolinks-eval="false"></script>
+        <script type="text/javascript">
+          $(function(){
+            var map = googleMap('map', <%= @region.zoom %>);
+
+            var hopMarkers = [];
+            var regionMarkers = [];
+
+            var hops = <%= @region.design_hops.to_json(:include => [:venue, :region]).html_safe %>;
+            $.each(hops, function(i, hop){
+              marker = {
+                latitude: hop.venue.latitude,
+                longitude: hop.venue.longitude,
+                infoContent: '<a href="/design_hops/' + hop.id + '" title="' + hop.name + '"><b>' + hop.name + '</b>',
+              }
+
+              hopMarkers.push(addMapMarker(marker, map, 'red'));
+            });
+
+            map.data.loadGeoJson('/NUTS_Level_1_January_2018_Full_Clipped_Boundaries_in_the_United_Kingdom.json', null, function (features){
+              markers = features.map(function(feature) {
+                if(feature.getProperty('nuts118nm') == '<%= @region.name %>') { map.setCenter({lat: feature.getProperty('lat'), lng: feature.getProperty('long')}) }
+              });
+
+            });
+          });
+
+        </script>
+        <div id="map" style="height:500px; border-radius:10px; letter-spacing: normal;"></div>
+      </div>
+      <div class="card mt-3">
+        <%
+        interactions = @region.interactions.select { |i| i.action_type == 'maturity' }
+
+        maturities = {
+          "Tech is not a priority for us" => 0,
+          "We don’t know where to start" => 0,
+          "We’re beginning to experiment with tech" => 0,
+          "Tech is a strategic priority and progress is happening" => 0,
+          "It's embedded into what we do across all areas and our daily practices" => 0
+        }
+        interactions.each do |interaction|
+          if maturities.key?(interaction.action) then maturities[interaction.action]+= 1 end
+        end
+        %>
+
+        <canvas id="org_maturities" width="400" height="150"></canvas>
+        <script>
+        var ctx = document.getElementById('org_maturities').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+                labels: [<%= ('"'+maturities.keys.join('","')+'"').html_safe %>],
+                datasets: [{
+                    data: [<%= maturities.values.join(",") %>],
+                    backgroundColor: '#2daeb7'
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+
+        <%
+        orgs = @region.organisations
+
+        incomes = {}
+        Organisation.incomes.keys.each do |category|
+          incomes[category] = 0
+        end
+
+        orgs.each do |org|
+           if incomes.key?(org.income) then incomes[org.income]+= 1 end
+        end
+        %>
+        <canvas id="org_incomes" width="400" height="150"></canvas>
+        <script>
+        var ctx = document.getElementById('org_incomes').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [<%= ('"'+incomes.keys.join('","')+'"').html_safe %>],
+                datasets: [{
+                    data: [<%= incomes.values.join(",") %>],
+                    backgroundColor: '#2daeb7'
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel : {
+                            display: false,
+                            labelString: 'Annual Income'
+                        },
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+      </div>
+    </div>
+  </div>
+</div>

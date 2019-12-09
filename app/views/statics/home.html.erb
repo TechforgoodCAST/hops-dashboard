@@ -1,0 +1,13 @@
+<div class="flex flex-column h-full items-center">
+  <div class="max-w-2xl mx-auto px-4 my-8">
+    <%= render partial: 'layouts/notices' %>
+
+    <h1 class="text-2xl font-bold mb-4">Data and dashboards for CAST Design Hops.</h1>
+
+    <hr class="my-6">
+
+    <p class="mb-6">Hops Dashboard is currently invitation only.</p>
+
+    <p class="mb-6"><%= link_to 'Sign in', new_user_session_path, class: 'btn btn-primary mb-6' %></p>
+  </div>
+</div>

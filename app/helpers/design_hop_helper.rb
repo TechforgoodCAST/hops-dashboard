@@ -1,0 +1,2 @@
+module DesignHopHelper
+end

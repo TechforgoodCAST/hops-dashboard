@@ -1,0 +1,55 @@
+en:
+  simple_form:
+    "yes": 'Yes'
+    "no": 'No'
+    required:
+      text: 'required'
+      mark: ''
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+    error_notification:
+      default_message: "Please review the problems below:"
+    # Examples
+    labels:
+      milestone:
+        success_criteria: "We'll know we've reached this milestone when..."
+        deadline: "We plan to reach this milestone by..."
+      project:
+        description: "Goal"
+        more_details: "More about this project"
+      iteration:
+        description: "(Optional) Description"
+        planned_debrief_date: "Debrief date"
+        outcomes:
+          title: "What are we going to learn or prove?"
+          success_criteria: "As a minimum, we'll know we've learnt or proved this when..."
+      # defaults:
+      #   password: 'Password'
+      # user:
+      #   new:
+      #     email: 'E-mail to sign in.'
+      #   edit:
+      #     email: 'E-mail.'
+    hints:
+      project:
+        title: "A short memorable name."
+        description: "What's the problem we're looking to address or opportunity to realise?"
+      iteration:
+        title: "Something short that defines the main aim of this batch of work, e.g. Understanding causes of childhood obesity."
+        description: "Provide more details on what work you'll do (tasks to be completed, estimated time, who will be involved etc.)"
+        description: "Provide more details on your team's approach to reaching the outcomes you intend - this could include the activities you'll undertake, how you'll conduct user research & testing, as well as the people, skills and capabilities you might need."
+        start_date: "When your team will start working towards the outcomes of this iteration - you'll receive regular reminders to check-in from this date."
+        planned_debrief_date: "When your team will meet to debrief the findings of this iteration and shape subsequent plans - between 2-12 weeks from the start date."
+        outcomes:
+          title: "E.g. That busy parents have trouble finding/accessing meals their fussy eaters will happily consume."
+          success_criteria: "E.g. We have interviewed 10 busy parents and 8/10 cite this challenge."
+      # defaults:
+      #   username: 'User name to sign in.'
+      #   password: 'No special characters, please.'
+    # include_blanks:
+    #   defaults:
+    #     age: 'Rather not say'
+    # prompts:
+    #   defaults:
+    #     age: 'Select your age'
