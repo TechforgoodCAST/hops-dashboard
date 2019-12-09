@@ -76,11 +76,5 @@ test:
 #
 # You can use this database configuration with:
 #
-#   production:
-#     url: <%= ENV['DATABASE_URL'] %>
-#
 production:
-  <<: *default
-  database: fusebox_insights_production
-  username: fusebox_insights
-  password: <%= ENV['FUSEBOX_INSIGHTS_DATABASE_PASSWORD'] %>
+ url: <%= ENV['DATABASE_URL'] %>
