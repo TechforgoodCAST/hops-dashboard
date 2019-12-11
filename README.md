@@ -1,4 +1,4 @@
-# Fusebox Insights
+# Hops Dashboard
 
 ## Getting started
 
@@ -10,8 +10,8 @@ These instructions will get a copy of the project up and running on your local m
 
 ### Install the app
 
-1. `git clone https://github.com/TechforgoodCAST/fusebox-insights.git`
-2. `cd fusebox-insights`
+1. `git clone https://github.com/TechforgoodCAST/hops-dashboard.git`
+2. `cd hops-dashboard`
 3. `bundle install`
 4. `yarn install`
 
