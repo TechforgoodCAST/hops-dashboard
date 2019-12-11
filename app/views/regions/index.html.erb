@@ -17,7 +17,7 @@
 
   <div class="w-1/2">
     <div class="card">
-      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxlCUcV6cfFlmWPGahqgr1Lk3NP6CqyL0" data-turbolinks-eval="false"></script>
+      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.google[:maps_api_key] %>" data-turbolinks-eval="false"></script>
       <script type="text/javascript">
         $(function(){
           var map = googleMap('map', 5);
