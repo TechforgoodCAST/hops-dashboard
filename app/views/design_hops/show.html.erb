@@ -12,6 +12,45 @@
       <p><%= organisation.name %></p>
     <% end %>
     
+    <h2 class="mt-3">Attendance by region</h2>
+    <%
+    regions = []
+    @hop.people.group(:region_id).count.each do |count|
+      regions.push({name: Region.find(count[0]).name, attendance: count[1], colour: Region.find(count[0]).colour})
+    end
+    regions.sort_by!{|r| -r[:attendance]}
+    %>
+      
+    <canvas id="region_breakdown" width="200" height="100" class="max-w-sm"></canvas>
+    <script>
+    var ctx = document.getElementById('region_breakdown').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: [<%= ('"'+regions.map {|r| r[:name]}.join('","')+'"').html_safe %>],
+          datasets: [{
+            data: [<%= regions.map {|r| r[:attendance]}.join(",") %>],
+            backgroundColor: [<%= ('"'+regions.map {|r| r[:colour]}.join('","')+'"').html_safe %>],
+          }]
+        },
+        options: {
+          legend: {
+              position: 'right'
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                let total = data.datasets[0].data.reduce((a, b) => a + b);
+                let val = data.datasets[0].data[tooltipItem.index];
+                let label = Math.round(val/total * 100)+'% ('+val+')';
+                return label;
+              }
+            }
+          }
+        }
+    });
+    </script>
+    
     <h2 class="mt-3">Organisations by maturity</h2>
     <%
     interactions = @hop.interactions.select { |i| i.action_type == 'maturity' }
