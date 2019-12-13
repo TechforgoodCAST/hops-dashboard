@@ -1,8 +1,9 @@
-
-<div class="max-w-5xl mx-auto px-4 my-8 flex ">
-  <%= render partial: 'layouts/notices' %>
+<div class="max-w-5xl mx-auto px-4 my-8 flex flex-wrap">
   
-  <div class="w-1/2 mr-3">
+  <div class="w-full">
+    <%= render partial: 'layouts/notices' %>
+  </div>
+  <div class="flex-1 mr-3">
     <div class="card">
       <h1><%= pluralize(@hops.count, 'hop') %><br>with <%= pluralize(Person.all.count, 'attendee') %><br>from <%= pluralize(Organisation.all.uniq.count, 'organisation')%></h1>
       <% @hops.group_by(&:region).each do |region, hops| %>
@@ -15,7 +16,7 @@
     </div>
   </div>
 
-  <div class="w-1/2">
+  <div class="flex-1">
     <div class="card">
       <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= Rails.application.credentials.google[:maps_api_key] %>" data-turbolinks-eval="false"></script>
       <script type="text/javascript">
