@@ -61,85 +61,86 @@
 #  end
 #end
 
-#@attendees = Airrecord.table("keyiKQ6Ut72kvmzN0", "appchfb5dUtfrlVSZ", "Attendee sign-up data")
-#@records = @attendees.all
-#
-#@records.each do |record|
-#  @fields = record.fields;
-#  
-#  unless Person.find_by({airtable_record: record.id})
-#    hop = DesignHop.find_by({name: @fields['Which design hop are you applying to join?'][0].sub(' (past)', '')})
-#    
-#    if hop
-#
-#      org = Organisation.find_by(
-#        {name: @fields['Organisation name']}) || 
-#        (!@fields['Charity Number'].nil? && Organisation.find_by({registration_id: @fields['Charity Number']})
-#      )
-#      %>
-#      
-#      <%
-#      unless org
-#        org = Organisation.create({
-#          name: @fields['Organisation name'],
-#          registration_type: 'CCEW',
-#          registration_id: @fields['Charity Number'],
-#          income: Organisation.incomes[Array(@fields['What size is your charity? What is your approximate income and number of employees?'])[0]]
-#          #num_employees: Get from CharityBase
-#        })
-#      end
-#
-#      person = Person.create({
-#        first_name: @fields['First name'],
-#        last_name: @fields['Last name'],
-#        email: @fields['Email'],
-#        airtable_record: record.id,
-#        organisation_id: org.id,
-#        region: Person.regions[Array(@fields['Region'])[0]],
-#        design_hop_id: hop.id
-#      })
-#
-#      Interaction.create({
-#        action_type: 1,
-#        action: @fields['People often talk about being on a ‘digital journey’ to describe the introduction and use of technology in their work. Where do you feel you are on that journey?'],
-#        date_occured: record.created_at,
-#        date_recorded: record.created_at,
-#        source: 'https://airtable.com/tbl72bAW3vmwsBe4Y/viwfeIy81HtV5GiZ3',
-#        person_id: person.id
-#      })
-#    end
-#  end
-#end
-
-@networks = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Networks")
-@records = @networks.all
+@attendees = Airrecord.table("keyiKQ6Ut72kvmzN0", "appchfb5dUtfrlVSZ", "Attendee sign-up data")
+@records = @attendees.all
 
 @records.each do |record|
   @fields = record.fields;
-
-  unless Network.find_by({airtable_record: record.id})
-
-    network = Network.create!({
-      name: @fields['Org/groups'],
-      airtable_record: record.id
-    })
-
-  end
   
-  network = Network.find_by({airtable_record: record.id})
+  unless Person.find_by({airtable_record: record.id}) || @fields['Crew?'] || !@fields['Attended Hop']
     
-    hops = Array(@fields['Design Hop partnered for'])
-    if hops
-      hops.each do |hop|
-        if DesignHop.find_by({airtable_record: hop})
-          HopNetwork.create!({
-            design_hop: DesignHop.find_by({airtable_record: hop}),
-            network: network
-          })  
-        end
-      end
+    if(@fields['Which design hop are you applying to join?'])
+      hop = DesignHop.find_by({name: @fields['Which design hop are you applying to join?'][0].sub(' (past)', '')})
     end
+    
+    if hop
+
+      org = Organisation.find_by(
+        {name: @fields['Organisation name']}) || 
+        (!@fields['Charity Number'].nil? && Organisation.find_by({registration_id: @fields['Charity Number']})
+      )
+      
+      unless org
+        org = Organisation.create({
+          name: @fields['Organisation name'],
+          registration_type: 'CCEW',
+          registration_id: @fields['Charity Number'],
+          income: Organisation.incomes[Array(@fields['What size is your charity? What is your approximate income and number of employees?'])[0]]
+          #num_employees: Get from CharityBase
+        })
+      end
+
+      person = Person.create({
+        first_name: @fields['First name'],
+        last_name: @fields['Last name'],
+        email: @fields['Email'],
+        airtable_record: record.id,
+        organisation_id: org.id,
+        region_id: Region.find_by({name: Array(@fields['Region'])[0]}).id,
+        design_hop_id: hop.id
+      })
+
+      Interaction.create({
+        action_type: 1,
+        action: @fields['People often talk about being on a ‘digital journey’ to describe the introduction and use of technology in their work. Where do you feel you are on that journey?'],
+        date_occured: record.created_at,
+        date_recorded: record.created_at,
+        source: 'https://airtable.com/tbl72bAW3vmwsBe4Y/viwfeIy81HtV5GiZ3',
+        person_id: person.id
+      })
+    end
+  end
 end
+
+#@networks = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Networks")
+#@records = @networks.all
+#
+#@records.each do |record|
+#  @fields = record.fields;
+#
+#  unless Network.find_by({airtable_record: record.id})
+#
+#    network = Network.create!({
+#      name: @fields['Org/groups'],
+#      airtable_record: record.id
+#    })
+#
+#  end
+#  
+#  network = Network.find_by({airtable_record: record.id})
+#    
+#    hops = Array(@fields['Design Hop partnered for'])
+#    if hops
+#      hops.each do |hop|
+#        if DesignHop.find_by({airtable_record: hop})
+#          HopNetwork.create!({
+#            design_hop: DesignHop.find_by({airtable_record: hop}),
+#            network: network
+#          })  
+#        end
+#      end
+#    end
+#end
 #
 #@crew = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Facilitators -  CAST CREW")
 #@records = @crew.all
