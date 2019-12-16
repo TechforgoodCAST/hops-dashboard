@@ -1,8 +1,6 @@
 class Organisation < ApplicationRecord
   has_many :people
   
-  include Regions
-  
   enum income: {
     '<£10k': 0,
     '£10k - £50k': 10000,
