@@ -5,11 +5,11 @@
 
   <div class="card">
     <h1><%= @hop.location.name %> - <%= friendly_date(@hop.date) %></h1>
-    <p class="text-sm text-gray-600"><%= pluralize(@hop.people.count, 'attendee') %> from <%= pluralize(@hop.organisations.count, 'organisation')%></p>
+    <p class="text-sm text-gray-600"><%= pluralize(@hop.people.count, 'attendee') %> from <%= pluralize(@hop.organisations.uniq.count, 'organisation')%></p>
    
     <h2 class="mt-3">Organisations</h2>
-    <% @hop.organisations.each do |organisation| %>
-      <p><%= organisation.name %></p>
+    <% @hop.organisations.group_by(&:name).each do |name, organisations| %>
+      <p><%= name %> <%= organisations.length > 1 ? "(#{organisations.length})" : '' %></p>
     <% end %>
     
     <h2 class="mt-3">Attendance by region</h2>
