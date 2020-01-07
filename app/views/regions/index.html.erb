@@ -6,10 +6,10 @@
   <div class="flex-1 mr-3">
     <div class="card">
       <h1><%= pluralize(@hops.count, 'hop') %><br>with <%= pluralize(Person.all.count, 'attendee') %><br>from <%= pluralize(Organisation.all.uniq.count, 'organisation')%></h1>
-      <% @hops.group_by(&:region).each do |region, hops| %>
+      <% @hops.includes(:region).order("regions.name desc").sort_by{|h| h.region.order}.group_by(&:region).each do |region, hops| %>
         <h3 class="mt-3"><%= link_to region.name, region_path(region) %> - <%= pluralize(hops.count, 'hop') %></h3>
         <p><%= number_to_percentage(region.organisations.uniq.count.to_f / region.charities.to_f * 100, precision: 1)%> coverage</p>
-        <% hops.uniq.each do |hop| %>
+        <% hops.sort_by{|h| h.date}.reverse.uniq.each do |hop| %>
           <p class="mb-1"><%= link_to hop.name, design_hop_path(hop), class: 'link' %></p>
         <% end %>
       <% end %>
