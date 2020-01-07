@@ -9,13 +9,13 @@
         <h1><%= @region.name %></h1>
         <p><%= pluralize(@region.design_hops.count, 'hop') %> with <%= pluralize(@region.people.count, 'attendee')%></p>
 
-        <h2 class="mt-3">Hops</h2>
-        <% @region.design_hops.each do |hop| %>
+        <h2 class="mt-3">Hops (<%= @region.design_hops.count %>)</h2>
+        <% @region.design_hops.order(date: :desc).each do |hop| %>
           <p><%= link_to hop.name, design_hop_path(hop), class: 'link' %></p>
         <% end %>
         
-        <h2 class="mt-3">Partners</h2>
-        <% @region.networks.uniq.each do |network| %>
+        <h2 class="mt-3">Partners (<%= @region.networks.uniq.count %>)</h2>
+        <% @region.networks.order(name: :asc).uniq.each do |network| %>
           <p><%= link_to network.name, network_path(network), class: 'link' %></p>
         <% end %>
         
@@ -24,7 +24,7 @@
           <p><%= crew.name %></p>
         <% end %>
         
-        <h2 class="mt-3">Organisations (<%= number_to_percentage(@region.organisations.uniq.count.to_f / @region.charities.to_f * 100, precision: 1)%>)</h2>
+        <h2 class="mt-3">Organisations (<%= @region.organisations.uniq.count %>, ~<%= number_to_percentage(@region.organisations.uniq.count.to_f / @region.charities.to_f * 100, precision: 1)%>)</h2>
         <% @region.organisations.uniq.each do |organisation| %>
           <p><%= organisation.name %></p>
         <% end %>
