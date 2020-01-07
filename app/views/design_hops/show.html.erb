@@ -8,7 +8,7 @@
     <p class="text-sm text-gray-600"><%= pluralize(@hop.people.count, 'attendee') %> from <%= pluralize(@hop.organisations.uniq.count, 'organisation')%></p>
    
     <h2 class="mt-3">Organisations</h2>
-    <% @hop.organisations.group_by(&:name).each do |name, organisations| %>
+    <% @hop.organisations.order(name: :asc).group_by(&:name).each do |name, organisations| %>
       <p><%= name %> <%= organisations.length > 1 ? "(#{organisations.length})" : '' %></p>
     <% end %>
     
