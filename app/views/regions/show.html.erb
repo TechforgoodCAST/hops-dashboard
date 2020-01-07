@@ -25,7 +25,7 @@
         <% end %>
         
         <h2 class="mt-3">Organisations (<%= @region.organisations.uniq.count %>, ~<%= number_to_percentage(@region.organisations.uniq.count.to_f / @region.charities.to_f * 100, precision: 1)%>)</h2>
-        <% @region.organisations.uniq.each do |organisation| %>
+        <% @region.organisations.order(name: :asc).uniq.each do |organisation| %>
           <p><%= organisation.name %></p>
         <% end %>
         
