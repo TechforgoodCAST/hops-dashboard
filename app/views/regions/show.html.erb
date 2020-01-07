@@ -19,8 +19,8 @@
           <p><%= link_to network.name, network_path(network), class: 'link' %></p>
         <% end %>
         
-        <h2 class="mt-3">Crew</h2>
-        <% @region.crews.each do |crew| %>
+        <h2 class="mt-3">Trained Crew (<%= @region.crews.select { |c| c.trained }.count %>)</h2>
+        <% @region.crews.select { |c| c.trained }.each do |crew| %>
           <p><%= crew.name %></p>
         <% end %>
         
