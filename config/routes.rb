@@ -14,7 +14,8 @@ Rails.application.routes.draw do
   
   get 'map', to: 'design_hops#map'
   
-  get 'airtable', to: 'statics#airtable'
+  get 'airtable', to: 'processing#airtable'
+  get 'charity', to: 'processing#charity'
 
   # Statics
 
