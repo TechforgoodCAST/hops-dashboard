@@ -1,6 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+	  //This is not a good solution because this file is cached and changes from the database are not reflected
       var regions = <%= Region.all.to_json.html_safe %>;
 
       //////// GOOGLE MAPS
