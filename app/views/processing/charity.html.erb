@@ -1,0 +1,32 @@
+
+<div class="max-w-5xl mx-auto px-4 my-8">
+  <%= render partial: 'layouts/notices' %>
+
+  <div class="card">
+    
+    <%
+    @attendees = Airrecord.table("keyiKQ6Ut72kvmzN0", "appchfb5dUtfrlVSZ", "Attendee sign-up data")
+    @records = @attendees.all
+
+    @records.each do |record|
+      @fields = record.fields;
+
+      org = (!@fields['Registration Number'].nil? && Organisation.find_by({registration_id: @fields['Registration Number']})) || Organisation.find_by({name: @fields['Organisation name']})
+
+      if org
+        
+        if @fields['Registrar'] == 'CCEW' && charity = CharityBaseService.new().getCharityByNum(@fields['Registration Number'])
+          umbrella = charity['operations'].detect{|operation| operation['id'] == "309"}
+        end
+        
+        Organisation.update(org.id, {
+          registration_type: @fields['Registrar'],
+          registration_id: @fields['Registration Number'],
+          umbrella_org: umbrella
+        })
+      end
+    end
+
+  %>
+  </div>
+</div>
