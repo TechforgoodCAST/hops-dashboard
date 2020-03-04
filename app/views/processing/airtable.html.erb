@@ -109,7 +109,7 @@ end
   end
 end
 
-@networks = Airrecord.table(ENV['AIRTABLE_API_KEY'], "app0xpjsYOOOn1yC0", "Networks")
+@networks = Airrecord.table(ENV['AIRTABLE_API_KEY'], "app0xpjsYOOOn1yC0", "Partners")
 @records = @networks.all
 
 @records.each do |record|
