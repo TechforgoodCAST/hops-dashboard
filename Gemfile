@@ -79,3 +79,4 @@ gem 'chart-js-rails'
 gem 'airrecord'
 gem 'omniauth-google-oauth2' 
 gem 'omniauth-rails_csrf_protection', '~> 0.1'
+gem 'dotenv-rails', groups: [:development, :test]

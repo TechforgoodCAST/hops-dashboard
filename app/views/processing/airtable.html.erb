@@ -5,7 +5,7 @@
   <div class="card">
     
     <% 
-@locations = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Locations")
+@locations = Airrecord.table(ENV['AIRTABLE_API_KEY'], "app0xpjsYOOOn1yC0", "Locations")
 @records = @locations.all
 @records.each do |record|
   @fields = record.fields;
@@ -17,11 +17,11 @@
   end
 end
 
-@venues = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Venues")
+@venues = Airrecord.table(ENV['AIRTABLE_API_KEY'], "app0xpjsYOOOn1yC0", "Venues")
 @records = @venues.all
 @records.each do |record|
   @fields = record.fields;
-  unless Venue.find_by({name: @fields['Name']})
+  unless Venue.find_by({name: @fields['Name']}) || @fields['Location'].nil?
     results = Geocoder.search(Array(@fields['Address'])[0], params: {region: "gb"})
 
     @location = @locations.find(@fields['Location'][0])
@@ -36,13 +36,13 @@ end
 end
 
 
-@hops = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Design hops")
+@hops = Airrecord.table(ENV['AIRTABLE_API_KEY'], "app0xpjsYOOOn1yC0", "Design hops")
 @records = @hops.all
 
 @records.each do |record|
   @fields = record.fields;
 
-  if @fields['Shareable?'] && @fields['Event name'] != 'Cancelled'
+  if @fields['Shareable?'] && @fields['Event name'] != 'Cancelled' && !@fields['Venues'].nil?
     @venue_record = @venues.find(Array(@fields['Venues'])[0])
     @venue = Venue.find_by({name: @venue_record.fields['Name']})
     date = @fields['Date'].to_datetime
@@ -60,7 +60,7 @@ end
   end
 end
 
-@attendees = Airrecord.table("keyiKQ6Ut72kvmzN0", "appchfb5dUtfrlVSZ", "Attendee sign-up data")
+@attendees = Airrecord.table(ENV['AIRTABLE_API_KEY'], "appchfb5dUtfrlVSZ", "Attendee sign-up data")
 @records = @attendees.all
 
 @records.each do |record|
@@ -109,7 +109,7 @@ end
   end
 end
 
-@networks = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Networks")
+@networks = Airrecord.table(ENV['AIRTABLE_API_KEY'], "app0xpjsYOOOn1yC0", "Networks")
 @records = @networks.all
 
 @records.each do |record|
@@ -139,7 +139,7 @@ end
     end
 end
 
-#@crew = Airrecord.table("keyiKQ6Ut72kvmzN0", "app0xpjsYOOOn1yC0", "Facilitators -  CAST CREW")
+#@crew = Airrecord.table(ENV['AIRTABLE_API_KEY'], "app0xpjsYOOOn1yC0", "Facilitators -  CAST CREW")
 #@records = @crew.all
 #
 #@records.each do |record|

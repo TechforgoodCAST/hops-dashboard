@@ -89,6 +89,10 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    dotenv (2.7.5)
+    dotenv-rails (2.7.5)
+      dotenv (= 2.7.5)
+      railties (>= 3.2, < 6.1)
     errbase (0.2.0)
     erubi (1.9.0)
     execjs (2.7.0)
@@ -319,6 +323,7 @@ DEPENDENCIES
   chart-js-rails
   cocoon (~> 1.2.14)
   devise (~> 4.7.1)
+  dotenv-rails
   factory_bot_rails (~> 4.11.1)
   friendly_id (~> 5.2.4)
   jbuilder (~> 2.5)

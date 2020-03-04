@@ -5,7 +5,7 @@
   <div class="card">
     
     <%
-    @attendees = Airrecord.table("keyiKQ6Ut72kvmzN0", "appchfb5dUtfrlVSZ", "Attendee sign-up data")
+    @attendees = Airrecord.table(ENV['AIRTABLE_API_KEY'], "appchfb5dUtfrlVSZ", "Attendee sign-up data")
     @records = @attendees.all
 
     @records.each do |record|
