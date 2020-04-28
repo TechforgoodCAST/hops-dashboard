@@ -74,14 +74,14 @@ end
     
     if hop
 
-      org = Organisation.find_by({name: @fields['Organisation name']}) || (!@fields['Charity Number'].nil? && Organisation.find_by({registration_id: @fields['Charity Number']}))
+      org = Organisation.find_by({name: @fields['Organisation name']}) || (!@fields['Registration Number'].nil? && Organisation.find_by({registration_id: @fields['Registration Number']}))
 		
       
       unless org
         org = Organisation.create({
           name: @fields['Organisation name'],
-          registration_type: 'CCEW',
-          registration_id: @fields['Charity Number'],
+          registration_type: @fields['Registrar'],
+          registration_id: @fields['Registration Number'],
           income: Organisation.incomes[Array(@fields['What size is your charity? What is your approximate income and number of employees?'])[0]]
           #num_employees: Get from CharityBase
         })
