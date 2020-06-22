@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationMailer < ActionMailer::Base
-  default from: 'Fusebox <no-reply@fusebox.org.uk>'
+  default from: 'CAST <no-reply@wearecast.org.uk>'
   layout 'mailer'
 end

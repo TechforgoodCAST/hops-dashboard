@@ -67,7 +67,7 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = { host: 'wearecast.org.uk' }
+  config.action_mailer.default_url_options = { host: 'hops-dashboard.herokuapp.com' }
 
   ActionMailer::Base.smtp_settings = {
     user_name: ENV['SENDGRID_USERNAME'],
