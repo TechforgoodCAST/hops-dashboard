@@ -80,4 +80,4 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'dotenv-rails', groups: [:development, :test]
 
-gem 'nokogiri', '~> 1.11.0.rc2'
+gem 'nokogiri', '~> 1.11.4'
